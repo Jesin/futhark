@@ -8,6 +8,8 @@
 #
 #  * 'tarball-nightly' produces a release tarball where the version number is "nightly".
 #
+#  * 'futhark-lib' is the Futhark compiler as a Haskell package.
+#
 # Just run
 #
 #   nix build
@@ -114,14 +116,16 @@
                   futhark-server = new.callPackage ./nix/futhark-server.nix { };
                   futhark-manifest = new.callPackage ./nix/futhark-manifest.nix { };
 
+                  # The plain Haskell package. This is what downstream Haskell
+                  # projects should depend on if they want to use Futhark as a
+                  # library rather than just run the compiled binary.
+                  futhark-lib = new.callCabal2nix "futhark" (cleanSource ./.) { };
+
                   # This derivation builds a statically linked 'futhark'
                   # executable on Linux; on other platforms it uses the default
                   # shared-library build.
                   futhark =
-                    let
-                      base = new.callCabal2nix "futhark" (cleanSource ./.) { };
-                    in
-                    pkgs.haskell.lib.overrideCabal base (old: {
+                    pkgs.haskell.lib.overrideCabal new.futhark-lib (old: {
                       enableLibraryProfiling = false;
                       isExecutable = true;
                       isLibrary = false;
@@ -224,6 +228,8 @@
         in
         {
           futhark = futhark versionFromCabal;
+
+          futhark-lib = pkgs'.haskellPackages.futhark-lib;
 
           tarball = tarball (futhark versionFromCabal);
 
