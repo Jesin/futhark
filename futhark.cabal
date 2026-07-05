@@ -381,6 +381,7 @@ library
       Futhark.Pass.FirstOrderTransform
       Futhark.Pass.LiftAllocations
       Futhark.Pass.LowerAllocations
+      Futhark.Pass.NoGrid
       Futhark.Pass.Simplify
       Futhark.Passes
       Futhark.Pipeline
