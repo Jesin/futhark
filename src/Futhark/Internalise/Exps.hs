@@ -909,8 +909,8 @@ internaliseExp desc (E.Attr attr e loc) = do
         case t of
           I.Array pt shape _ ->
             letSubExp desc $ I.BasicOp $ I.Scratch pt $ I.shapeDims shape
-          I.Prim pt ->
-            pure $ constant $ blankPrimValue pt
+          -- Ignore scratch on non-arrays because they are sometimes applied
+          -- too promisciously.
           _ -> pure se
     "blank" -> do
       ts <- mapM subExpType e'

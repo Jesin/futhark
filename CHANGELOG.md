@@ -18,6 +18,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * A case where complex sizes referring to explicit parameters was mishandled by
   monomorphisation (#2230).
 
+* An issue where `#[scratch]` would apply to subexpressions in undesirable ways,
+  changing the type of the expression at the IR level.
+
 ## [0.26.4]
 
 ### Added
